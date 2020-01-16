@@ -100,7 +100,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function prizes()
     {
-        return $this->belongsToMany(Prize::class)->withTimestamps()->withPivot('id');
+        return $this->belongsToMany(Prize::class)->withTimestamps()->withPivot(['id','status']);
     }
 
     public function runes()
