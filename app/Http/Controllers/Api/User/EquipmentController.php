@@ -8,10 +8,12 @@ use App\Http\Resources\Chest as ChestResource;
 use App\Http\Resources\Prize as PrizeResource;
 use App\Http\Resources\Rune as RuneResource;
 use App\Models\Chest;
+use App\Models\Interfaces\ToBuy;
 use App\Models\Prize;
 use App\Models\Rune;
+use App\Repository\Interfaces\UserRepositoryInterface;
 use App\Repository\UserRepository;
-use App\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,20 +26,25 @@ class EquipmentController extends Controller
 
     /**
      * EquipmentController constructor.
-     * @param UserRepository $userRepository
+     * @param UserRepositoryInterface $userRepository
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
-    public function getUsersEquipment()
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getUsersEquipment(Request $request)
     {
-        /** @var User $user */
-        $user = auth()->user();
-        return response()->json($this->userRepository->getEquipment($user), Response::HTTP_OK);
+        return response()->json($this->userRepository->getEquipment($request->user()), Response::HTTP_OK);
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function getAvailableEquipment()
     {
         return response()->json([
@@ -47,44 +54,37 @@ class EquipmentController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function buyChest(Request $request, Chest $chest)
+    /**
+     * @param Chest $chest
+     * @return JsonResponse
+     */
+    public function buyChest(Chest $chest)
     {
-        /** @var User $user */
-        $user = auth()->user();
-        try {
-            $this->userRepository->buyEquipment($user, $chest);
-            return response()->json([
-                'message'=>'Kupiłeś skrzynkę'
-            ],Response::HTTP_CREATED);
-        } catch (CantBuyException $e) {
-            return response()->json([
-                'message'=>$e->getMessage()
-            ],$e->getCode());
-        }
+        return $this->buy($chest);
     }
 
-    public function buyPrize(Request $request, Prize $prize)
+    /**
+     * @param Prize $prize
+     * @return JsonResponse
+     */
+    public function buyPrize(Prize $prize)
     {
-        /** @var User $user */
-        $user = auth()->user();
-        try {
-            $this->userRepository->buyEquipment($user, $prize);
-            return response()->json([
-                'message'=>'Kupiłeś nagrodę'
-            ],Response::HTTP_CREATED);
-        } catch (CantBuyException $e) {
-            return response()->json([
-                'message'=>$e->getMessage()
-            ],$e->getCode());
-        }
+        return $this->buy($prize);
     }
 
-    public function buyRune(Request $request, Rune $rune)
+    /**
+     * @param Rune $rune
+     * @return JsonResponse
+     */
+    public function buyRune(Rune $rune)
     {
-        /** @var User $user */
-        $user = auth()->user();
+        return $this->buy($rune);
+    }
+
+    private function buy(ToBuy $toBuy)
+    {
         try {
-            $this->userRepository->buyEquipment($user, $rune);
+            $this->userRepository->buyEquipment(request()->user(), $toBuy);
             return response()->json([
                 'message'=>'Kupiłeś nagrodę'
             ],Response::HTTP_CREATED);

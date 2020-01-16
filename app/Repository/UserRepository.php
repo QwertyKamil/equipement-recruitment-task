@@ -9,10 +9,11 @@ use App\Http\Resources\UserChest as ChestResource;
 use App\Http\Resources\UserPrize as PrizeResource;
 use App\Http\Resources\UserRune as RuneResource;
 use App\Models\Interfaces\ToBuy;
+use App\Repository\Interfaces\UserRepositoryInterface;
 use App\User;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserRepository
+class UserRepository implements UserRepositoryInterface
 {
     public function getEquipment(User $user)
     {
