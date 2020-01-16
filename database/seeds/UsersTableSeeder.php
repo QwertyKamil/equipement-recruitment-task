@@ -19,7 +19,7 @@ class UsersTableSeeder extends Seeder
             ->each(function (User $user) {
                 foreach (Prize::inRandomOrder()->limit(3)->get() as $item) {
                     $user->prizes()->attach($item, [
-                        'status' => rand(0, 3)
+                        'status' => rand(0, 2)
                     ]);
                 }
                 foreach (Chest::inRandomOrder()->limit(3)->get() as $item) {
