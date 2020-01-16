@@ -23,5 +23,11 @@ Route::prefix('auth')->group(function(){
 });
 
 Route::middleware('auth:api')->group(function() {
-    Route::get('equipment','Api\User\EquipmentController@index');
+    Route::prefix('equipment')->group(function(){
+        Route::get('','Api\User\EquipmentController@getUsersEquipment');
+        Route::get('available','Api\User\EquipmentController@getAvailableEquipment');
+        Route::post('buy/chest/{chest}','Api\User\EquipmentController@buyChest');
+        Route::post('buy/prize/{prize}','Api\User\EquipmentController@buyPrize');
+        Route::post('buy/rune/{rune}','Api\User\EquipmentController@buyRune');
+    });
 });

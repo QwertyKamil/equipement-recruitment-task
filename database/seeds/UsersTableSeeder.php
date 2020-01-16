@@ -18,7 +18,9 @@ class UsersTableSeeder extends Seeder
         factory(User::class, 10)->create()
             ->each(function (User $user) {
                 foreach (Prize::inRandomOrder()->limit(3)->get() as $item) {
-                    $user->prizes()->attach($item);
+                    $user->prizes()->attach($item, [
+                        'status' => rand(0, 3)
+                    ]);
                 }
                 foreach (Chest::inRandomOrder()->limit(3)->get() as $item) {
                     $user->chests()->attach($item);

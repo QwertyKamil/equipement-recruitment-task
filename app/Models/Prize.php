@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Interfaces\ToBuy;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -24,7 +26,22 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Prize whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class Prize extends Model
+class Prize extends Model implements ToBuy
 {
     protected $fillable = ['name','image','code'];
+
+    private function users()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps()->withPivot('id');
+    }
+
+    public function assignToUser(User $user)
+    {
+        $this->users()->attach($user);
+    }
+
+    public function canBuy(float $balance): bool
+    {
+        return true;
+    }
 }
