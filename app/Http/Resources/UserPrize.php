@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Chest extends JsonResource
+class UserPrize extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,10 @@ class Chest extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'=>$this->id,
+            'id'=>$this->pivot->id,
             'name'=>$this->name,
             'image'=>$this->image,
+            'status'=>$this->pivot->status,
         ];
     }
 }

@@ -4,9 +4,9 @@
 namespace App\Repository;
 
 
-use App\Http\Resources\Chest as ChestResource;
-use App\Http\Resources\Prize as PrizeResource;
-use App\Http\Resources\Rune as RuneResource;
+use App\Http\Resources\UserChest as ChestResource;
+use App\Http\Resources\UserPrize as PrizeResource;
+use App\Http\Resources\UserRune as RuneResource;
 use App\User;
 
 class UserRepository
